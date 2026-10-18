@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TLoffice</title>
+<style>
+:root{--bg:#f4f3ee;--sf:#fff;--tx:#1d1c1a;--mu:#6d6a62;--bd:#dcd9cf;--ac:#2f5fd0;--ac2:#e6edfb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--sf:#222226;--tx:#ecebe6;--mu:#9a978f;--bd:#37373d;--ac:#7ea0ff;--ac2:#2a3350}}
+:root[data-theme="dark"]{--bg:#17171a;--sf:#222226;--tx:#ecebe6;--mu:#9a978f;--bd:#37373d;--ac:#7ea0ff;--ac2:#2a3350}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
+button,select,input,textarea{font:inherit;color:var(--tx);background:var(--sf);border:1px solid var(--bd);border-radius:6px;padding:5px 9px}
+button,.btn{cursor:pointer}button:hover,.btn:hover{border-color:var(--ac)}
+.on{background:var(--ac2)!important;border-color:var(--ac)!important}
+.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
+.btn{display:inline-block;border:1px solid var(--bd);border-radius:6px;padding:5px 9px;background:var(--sf)}
+header{display:flex;gap:6px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--bd);background:var(--sf);flex-wrap:wrap}
+header h1{font-size:16px;margin:0 12px 0 0}
+#st{color:var(--mu);margin-left:auto;font-size:13px}
+.view{display:none;flex:1;min-height:0}.view.on{display:flex;background:none;border:0}
+aside{width:270px;overflow:auto;border-right:1px solid var(--bd);padding:12px;background:var(--sf);box-sizing:border-box}
+aside h4{margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu)}
+.row{display:flex;gap:4px}.row input{flex:1;min-width:0}
+.li{display:flex;justify-content:space-between;gap:6px;padding:5px 6px;border-radius:6px;cursor:pointer}
+.li:hover,.it:hover{background:var(--ac2)}.li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.li b{color:var(--mu)}
+.it{display:block;width:100%;text-align:left;border:0;background:none;padding:4px 6px;font-size:13px}
+.mu{color:var(--mu)}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.bar{display:flex;gap:5px;flex-wrap:wrap;align-items:center;padding:8px;border-bottom:1px solid var(--bd);background:var(--sf)}
+.bar input[type=number]{width:56px}.bar .sp{width:1px;height:22px;background:var(--bd);margin:0 4px}
+#stage{flex:1;overflow:auto;padding:20px;text-align:center}
+#empty{margin-top:15vh;color:var(--mu)}
+.pgw{position:relative;margin:0 auto 14px;box-shadow:0 2px 14px rgba(0,0,0,.25);background:#fff;line-height:0}
+.pgw canvas{display:block}.ov{position:absolute;inset:0;touch-action:none;pointer-events:none}.draw .ov{pointer-events:auto;cursor:crosshair}
+.nl{position:absolute;inset:0;pointer-events:none}
+.note{position:absolute;pointer-events:auto;background:#fff3a3;border:1px solid #d9c34a;border-radius:6px;width:160px;line-height:1.3;box-shadow:0 2px 6px rgba(0,0,0,.3);text-align:left}
+.note textarea{width:100%;height:64px;border:0;background:transparent;color:#222;font:12px system-ui;box-sizing:border-box;resize:both}
+.note b{cursor:pointer;float:right;padding:0 7px;color:#555}
+#pw{flex:1;overflow:auto;padding:20px}
+#ed{margin:0 auto;background:#fff;color:#111;width:210mm;min-height:297mm;box-sizing:border-box;outline:none;box-shadow:0 2px 14px rgba(0,0,0,.25)}
+#ed img{max-width:100%}
+#v-study{overflow:auto;padding:20px;gap:16px;flex-wrap:wrap;align-content:flex-start}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:18px;width:340px;box-sizing:border-box}
+.card h3{margin:0 0 12px;font-size:15px}
+#tm{font-size:54px;font-weight:600;text-align:center;font-variant-numeric:tabular-nums}
+.fc{min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;border:1px solid var(--bd);border-radius:10px;cursor:pointer;margin-bottom:10px;white-space:pre-wrap}
+.fc.fl{background:var(--ac2)}
+.tk{display:flex;gap:8px;align-items:center;padding:4px 0}.tk span:nth-child(2){flex:1}.late{color:#d23}.done{text-decoration:line-through;color:var(--mu)}
+.card .row{margin-top:8px}.card input[type=text]{width:100%;box-sizing:border-box}
+#logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;margin-right:14px;user-select:none}
+.lg{font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--ac)}#logo small{font-size:11.5px;color:var(--mu)}
+.home{flex:1;overflow:auto;padding:32px 24px}.home>*{max-width:920px;margin-left:auto;margin-right:auto}.home h2{margin:0 auto 4px;font-size:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:20px!important}
+.cat{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:16px;border-radius:12px;font-size:28px;line-height:1.2}
+.cat b{font-size:15px}.cat span{font-size:13px;color:var(--mu)}.cat:hover{background:var(--ac2)}
+#ed img.sel{outline:2px solid #2f5fd0}.lgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px!important}
+</style>
+</head>
+<body>
+<header>
+<div id="logo" role="button" tabindex="0" title="На главную"><span class="lg">TLoffice</span><small>Narek Tech Lab</small></div>
+<button class="tab on" data-v="home">Домой</button>
+<button class="tab" data-v="read">Читалка PDF</button>
+<button class="tab" data-v="doc">Бланки</button>
+<button class="tab" data-v="study">Учёба</button>
+<span id="st"></span>
+<button id="bk" title="Резервная копия: заметки, документы, карточки (без самих PDF)">Копия</button>
+<label class="btn" title="Восстановить из копии">Восстановить<input id="bi" type="file" accept=".json" hidden></label>
+<button id="th">Тема</button>
+</header>
+
+<section id="v-home" class="view on"><div class="home">
+<h2>Что будем делать?</h2><p class="mu">Выберите категорию</p>
+<div id="lgs" class="lgs"></div>
+<div class="grid">
+<button class="cat" data-go="read">📖<b>Читалка PDF</b><span>Книги и статьи: все страницы, заметки, маркер, поиск</span></button>
+<button class="cat" data-go="doc">📝<b>Мои документы</b><span>Редактор как в Word, скачать .docx и PDF</span></button>
+<button class="cat" data-new="gost">🎓<b>Реферат по ГОСТу</b><span>Титульный лист и поля по стандарту</span></button>
+<button class="cat" data-new="notes">🗒️<b>Конспект лекции</b><span>Готовая структура для записей</span></button>
+<button class="cat" data-new="letter">✉️<b>Заявление / письмо</b><span>Деловой бланк</span></button>
+<button class="cat" data-new="blank">📄<b>Пустой лист</b><span>Чистый документ</span></button>
+<button class="cat" data-go="study" data-at="tm">⏱️<b>Помодоро</b><span>Таймер 25 / 5 минут</span></button>
+<button class="cat" data-go="study" data-at="cd">🃏<b>Карточки</b><span>Вопрос и ответ для запоминания</span></button>
+<button class="cat" data-go="study" data-at="tl">✅<b>Задачи и дедлайны</b><span>Что и к какому сроку</span></button>
+</div></div></section>
+
+<section id="v-read" class="view">
+<aside>
+<label class="btn pri">+ Добавить PDF<input id="up" type="file" accept="application/pdf" multiple hidden></label>
+<h4>Библиотека</h4><div id="lib"></div>
+<h4>Поиск</h4><div class="row"><input id="q" placeholder="Слово или фраза"><button id="qb">Найти</button></div><div id="qr"></div>
+<h4>Оглавление</h4><div id="toc"><span class="mu">Откройте книгу</span></div>
+<h4>Закладки <button id="bma">+ эта страница</button></h4><div id="bms"></div>
+</aside>
+<div class="main">
+<div class="bar">
+<button id="pv">←</button><input id="pn" type="number" min="1" value="1"><span id="pt" class="mu">/ 0</span><button id="nx">→</button>
+<span class="sp"></span>
+<button id="zo">−</button><span id="zl" class="mu">120%</span><button id="zi">+</button><button id="zf">По ширине</button>
+<span class="sp"></span>
+<button data-tool="none" class="on">Читать</button><button data-tool="pen">🖊 Перо</button><button data-tool="mark">🖍 Маркер</button><button data-tool="note">📝 Заметка</button>
+<input type="color" id="pc" value="#d93025" title="Цвет пера">
+<button id="un">Отменить</button><button id="cl">Очистить стр.</button>
+</div>
+<div id="stage"><div id="empty">Добавьте PDF слева — книгу или статью. Она сохранится в браузере.</div>
+<div id="pages"></div></div>
+</div>
+</section>
+
+<section id="v-doc" class="view">
+<div class="main">
+<div class="bar">
+<select id="ds" title="Документы"></select><input id="dn" placeholder="Название" style="width:150px">
+<select id="nt"><option value="">+ Новый…</option><option value="blank">Пустой лист</option><option value="gost">Реферат по ГОСТу</option><option value="notes">Конспект лекции</option><option value="letter">Заявление / письмо</option></select>
+<button id="dd">Удалить</button>
+<span class="sp"></span>
+<button id="xd" class="pri">Скачать .docx</button><button id="xp" class="pri">Скачать PDF</button>
+</div>
+<div class="bar">
+<button data-c="undo">↶</button><button data-c="redo">↷</button><span class="sp"></span>
+<select id="fb"><option value="p">Обычный</option><option value="h1">Заголовок 1</option><option value="h2">Заголовок 2</option><option value="h3">Заголовок 3</option><option value="blockquote">Цитата</option></select>
+<select id="ff"><option>Calibri</option><option>Arial</option><option>Times New Roman</option><option>Georgia</option><option>Courier New</option><option>Verdana</option></select>
+<select id="fs"><option value="2">Мелкий</option><option value="3" selected>Обычный</option><option value="4">Средний</option><option value="5">Крупный</option><option value="6">Огромный</option></select>
+<span class="sp"></span>
+<button data-c="bold"><b>Ж</b></button><button data-c="italic"><i>К</i></button><button data-c="underline"><u>Ч</u></button><button data-c="strikeThrough"><s>З</s></button>
+<input type="color" id="fc" value="#000000" title="Цвет текста"><input type="color" id="hc" value="#ffee00" title="Выделение цветом">
+<span class="sp"></span>
+<button data-c="justifyLeft">⇤</button><button data-c="justifyCenter">↔</button><button data-c="justifyRight">⇥</button><button data-c="justifyFull">≡</button>
+<button data-c="insertUnorderedList">• Список</button><button data-c="insertOrderedList">1. Список</button><button data-c="outdent">⇠</button><button data-c="indent">⇢</button>
+<span class="sp"></span>
+<input id="tr" type="number" min="1" value="3" style="width:50px" title="Строк"><input id="tc" type="number" min="1" value="3" style="width:50px" title="Столбцов"><button id="tb">Таблица</button>
+<label class="btn pri">🖼 Фото<input id="im" type="file" accept="image/*" multiple hidden></label><span class="mu">Размер фото:</span><button data-ip="25">25%</button><button data-ip="50">50%</button><button data-ip="75">75%</button><button data-ip="100">100%</button><button id="idl">🗑</button>
+<button id="pb">Разрыв стр.</button><button data-c="removeFormat">Сбросить</button>
+</div>
+<div id="pw"><div id="ed" contenteditable="true" spellcheck="true"></div></div>
+</div>
+</section>
+
+<section id="v-study" class="view">
+<div class="card"><h3>⏱ Помодоро</h3><div id="tm">25:00</div><div id="pm" class="mu" style="text-align:center;margin:6px 0 10px">Работа · циклов: 0</div>
+<div class="row"><button id="ps" class="pri" style="flex:1">Старт</button><button id="pr">Сброс</button></div></div>
+<div class="card"><h3>🃏 Карточки</h3><div id="cd" class="fc"></div><div class="row"><button id="c1">←</button><span id="cc" class="mu" style="flex:1;text-align:center;align-self:center"></span><button id="c2">→</button><button id="cx">×</button></div>
+<div class="row"><input type="text" id="ca" placeholder="Вопрос"></div><div class="row"><input type="text" id="cb" placeholder="Ответ"><button id="cn">Добавить</button></div></div>
+<div class="card"><h3>✅ Задачи и дедлайны</h3><div id="tl"></div><div class="row"><input type="text" id="ti" placeholder="Новая задача"><input type="date" id="td"><button id="tn">+</button></div></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const LS={g(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},s(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const st=t=>{$('#st').textContent=tr(t)};
+const LG=[['ru','Русский'],['en','English'],['es','Español'],['ca','Català'],['hy','Հայերեն']],M={},O=new WeakMap();let lang=LS.g('lang','ru');
+`Домой|Home|Inicio|Inici|Գլխավոր
+Читалка PDF|PDF reader|Lector de PDF|Lector de PDF|PDF ընթերցիչ
+Бланки|Documents|Documentos|Documents|Փաստաթղթեր
+Учёба|Study|Estudio|Estudi|Ուսում
+Копия|Backup|Copia|Còpia|Պահուստ
+Восстановить|Restore|Restaurar|Restaura|Վերականգնել
+Тема|Theme|Tema|Tema|Թեմա
+На главную|Home|Inicio|Inici|Գլխավոր
+Резервная копия: заметки, документы, карточки (без самих PDF)|Backup: notes, documents, cards (not the PDFs)|Copia: notas, documentos y tarjetas (sin los PDF)|Còpia: notes, documents i targetes (sense els PDF)|Պահուստ՝ նշումներ, փաստաթղթեր, քարտեր (առանց PDF-ների)
+Восстановить из копии|Restore from backup|Restaurar desde copia|Restaura des d’una còpia|Վերականգնել պահուստից
+Что будем делать?|What shall we do?|¿Qué hacemos?|Què fem?|Ի՞նչ անենք
+Выберите категорию|Choose a category|Elige una categoría|Tria una categoria|Ընտրեք բաժին
+Книги и статьи: все страницы, заметки, маркер, поиск|Books and articles: all pages, notes, highlighter, search|Libros y artículos: todas las páginas, notas, marcador, búsqueda|Llibres i articles: totes les pàgines, notes, marcador, cerca|Գրքեր և հոդվածներ՝ բոլոր էջերը, նշումներ, մարկեր, որոնում
+Мои документы|My documents|Mis documentos|Els meus documents|Իմ փաստաթղթերը
+Редактор как в Word, скачать .docx и PDF|Word-like editor, download .docx and PDF|Editor tipo Word, descarga .docx y PDF|Editor tipus Word, baixa .docx i PDF|Word-ի նման խմբագիր, ներբեռնեք .docx և PDF
+Реферат по ГОСТу|Report (GOST format)|Trabajo (formato GOST)|Treball (format GOST)|Ռեֆերատ (ԳՕՍՏ)
+Титульный лист и поля по стандарту|Title page and standard margins|Portada y márgenes estándar|Portada i marges estàndard|Տիտղոսաթերթ և ստանդարտ լուսանցքներ
+Конспект лекции|Lecture notes|Apuntes de clase|Apunts de classe|Դասախոսության նշումներ
+Готовая структура для записей|Ready-made note structure|Estructura lista para tus notas|Estructura llesta per a les notes|Պատրաստի կառուցվածք նշումների համար
+Заявление / письмо|Application / letter|Solicitud / carta|Sol·licitud / carta|Դիմում / նամակ
+Деловой бланк|Formal template|Plantilla formal|Plantilla formal|Պաշտոնական ձևանմուշ
+Пустой лист|Blank page|Hoja en blanco|Full en blanc|Դատարկ թերթ
+Чистый документ|Clean document|Documento limpio|Document net|Մաքուր փաստաթուղթ
+Помодоро|Pomodoro|Pomodoro|Pomodoro|Պոմոդորո
+Таймер 25 / 5 минут|25 / 5 minute timer|Temporizador 25 / 5 minutos|Temporitzador 25 / 5 minuts|25 / 5 րոպե ժամաչափ
+Карточки|Flashcards|Tarjetas|Targetes|Քարտեր
+Вопрос и ответ для запоминания|Question and answer for memorising|Pregunta y respuesta para memorizar|Pregunta i resposta per memoritzar|Հարց և պատասխան անգիր անելու համար
+Задачи и дедлайны|Tasks and deadlines|Tareas y plazos|Tasques i terminis|Առաջադրանքներ և ժամկետներ
+Что и к какому сроку|What is due and when|Qué y para cuándo|Què i per quan|Ինչ և մինչև երբ
++ Добавить PDF|+ Add PDF|+ Añadir PDF|+ Afegeix PDF|+ Ավելացնել PDF
+Библиотека|Library|Biblioteca|Biblioteca|Գրադարան
+Поиск|Search|Buscar|Cerca|Որոնում
+Слово или фраза|Word or phrase|Palabra o frase|Paraula o frase|Բառ կամ արտահայտություն
+Найти|Find|Buscar|Cerca|Գտնել
+Оглавление|Contents|Índice|Índex|Բովանդակություն
+Откройте книгу|Open a book|Abre un libro|Obre un llibre|Բացեք գիրք
+Закладки|Bookmarks|Marcadores|Marcadors|Էջանիշեր
++ эта страница|+ this page|+ esta página|+ aquesta pàgina|+ այս էջը
+По ширине|Fit width|Ajustar ancho|Ajusta l’amplada|Լայնությամբ
+Читать|Read|Leer|Llegeix|Կարդալ
+Перо|Pen|Bolígrafo|Bolígraf|Գրիչ
+Маркер|Highlighter|Marcador|Marcador|Մարկեր
+Заметка|Note|Nota|Nota|Նշում
+Отменить|Undo|Deshacer|Desfés|Չեղարկել
+Очистить стр.|Clear page|Borrar página|Esborra la pàgina|Մաքրել էջը
+Цвет пера|Pen colour|Color del bolígrafo|Color del bolígraf|Գրչի գույնը
+Добавьте PDF слева — книгу или статью. Она сохранится в браузере.|Add a PDF on the left — a book or article. It is saved in your browser.|Añade un PDF a la izquierda: un libro o artículo. Se guarda en tu navegador.|Afegeix un PDF a l’esquerra: un llibre o article. Es desa al navegador.|Ավելացրեք PDF ձախից՝ գիրք կամ հոդված։ Այն կպահվի դիտարկիչում։
+Пока пусто|Empty for now|Aún vacío|Encara buit|Դեռ դատարկ է
+Нет закладок|No bookmarks|Sin marcadores|Sense marcadors|Էջանիշեր չկան
+В этом PDF нет оглавления|This PDF has no contents|Este PDF no tiene índice|Aquest PDF no té índex|Այս PDF-ում բովանդակություն չկա
+Заметка…|Note…|Nota…|Nota…|Նշում…
+Точно?|Sure?|¿Seguro?|Segur?|Վստա՞հ եք
+Ищу…|Searching…|Buscando…|Cercant…|Որոնում…
+Не найдено (в сканах без текста поиск не работает)|Not found (search does not work on scans without text)|No encontrado (la búsqueda no funciona en escaneos sin texto)|No trobat (la cerca no funciona en escanejos sense text)|Չի գտնվել (սկանավորված էջերում որոնումը չի աշխատում)
+Название|Title|Título|Títol|Վերնագիր
++ Новый…|+ New…|+ Nuevo…|+ Nou…|+ Նոր…
+Удалить|Delete|Eliminar|Elimina|Ջնջել
+Скачать .docx|Download .docx|Descargar .docx|Baixa .docx|Ներբեռնել .docx
+Скачать PDF|Download PDF|Descargar PDF|Baixa PDF|Ներբեռնել PDF
+Обычный|Normal|Normal|Normal|Սովորական
+Заголовок 1|Heading 1|Título 1|Títol 1|Վերնագիր 1
+Заголовок 2|Heading 2|Título 2|Títol 2|Վերնագիր 2
+Заголовок 3|Heading 3|Título 3|Títol 3|Վերնագիր 3
+Цитата|Quote|Cita|Cita|Մեջբերում
+Мелкий|Small|Pequeño|Petit|Փոքր
+Средний|Medium|Mediano|Mitjà|Միջին
+Крупный|Large|Grande|Gran|Մեծ
+Огромный|Huge|Enorme|Enorme|Հսկայական
+Список|List|Lista|Llista|Ցուցակ
+1. Список|1. List|1. Lista|1. Llista|1. Ցուցակ
+Таблица|Table|Tabla|Taula|Աղյուսակ
+Фото|Photo|Foto|Foto|Լուսանկար
+Размер фото:|Photo size:|Tamaño de foto:|Mida de la foto:|Լուսանկարի չափը՝
+Разрыв стр.|Page break|Salto de página|Salt de pàgina|Էջի ընդհատում
+Сбросить|Clear format|Quitar formato|Esborra el format|Մաքրել ձևաչափը
+Цвет текста|Text colour|Color del texto|Color del text|Տեքստի գույնը
+Выделение цветом|Highlight colour|Color de resaltado|Color de ressaltat|Ընդգծման գույնը
+Строк|Rows|Filas|Files|Տողեր
+Столбцов|Columns|Columnas|Columnes|Սյուներ
+Старт|Start|Iniciar|Inicia|Սկսել
+Пауза|Pause|Pausa|Pausa|Դադար
+Сброс|Reset|Reiniciar|Reinicia|Զրոյացնել
+Работа|Work|Trabajo|Treball|Աշխատանք
+Перерыв|Break|Descanso|Descans|Ընդմիջում
+циклов|cycles|ciclos|cicles|ցիկլեր
+Вопрос|Question|Pregunta|Pregunta|Հարց
+Ответ|Answer|Respuesta|Resposta|Պատասխան
+Добавить|Add|Añadir|Afegeix|Ավելացնել
+Добавьте первую карточку|Add your first card|Añade tu primera tarjeta|Afegeix la teva primera targeta|Ավելացրեք առաջին քարտը
+Новая задача|New task|Nueva tarea|Nova tasca|Նոր առաջադրանք
+Задач пока нет|No tasks yet|Aún no hay tareas|Encara no hi ha tasques|Առաջադրանքներ դեռ չկան
+Сохранено|Saved|Guardado|Desat|Պահպանվեց
+Файл сохранён|File saved|Archivo guardado|Fitxer desat|Ֆայլը պահպանվեց
+Открываю…|Opening…|Abriendo…|Obrint…|Բացվում է…
+Не удалось открыть PDF|Could not open the PDF|No se pudo abrir el PDF|No s’ha pogut obrir el PDF|PDF-ը չհաջողվեց բացել
+Сначала нажмите на фото|Click a photo first|Primero haz clic en una foto|Primer fes clic en una foto|Սկզբում սեղմեք լուսանկարի վրա
+Готовлю PDF…|Preparing PDF…|Preparando PDF…|Preparant PDF…|PDF-ը պատրաստվում է…
+Страниц|Pages|Páginas|Pàgines|Էջեր`.split('\n').forEach(l=>{const r=l.split('|');M[r[0]]=r});
+const look=o=>{const t=o.trim();if(M[t])return['',M[t]];const m=t.match(/^([^\p{L}\p{N}\s]+)\s+(.+)$/u);return m&&M[m[2]]?[m[1]+' ',M[m[2]]]:null};
+const tr=s=>{const l=look(s),i=LG.findIndex(x=>x[0]===lang);return l&&l[1][i]&&i>0?s.replace(s.trim(),l[0]+l[1][i]):s};
+function applyTo(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){if(n.parentNode.closest('script,style,#ed,textarea'))continue;const o=O.has(n)?O.get(n):n.data;if(look(o)){O.set(n,o);const v=tr(o);if(n.data!==v)n.data=v}}
+(root.querySelectorAll?[...root.querySelectorAll('[placeholder],[title]')]:[]).forEach(e=>['placeholder','title'].forEach(a=>{if(!e.hasAttribute(a))return;const k='o'+a;if(!e.dataset[k]&&look(e.getAttribute(a)))e.dataset[k]=e.getAttribute(a);if(e.dataset[k])e.setAttribute(a,tr(e.dataset[k]))}))}
+new MutationObserver(ms=>{if(lang==='ru')return;ms.forEach(m=>m.addedNodes.forEach(n=>{const r=n.nodeType===3?n.parentNode:n;if(r&&r.isConnected)applyTo(r)}))}).observe(document.body,{childList:true,subtree:true});
+function setLang(l){lang=l;LS.s('lang',l);document.documentElement.lang=l;$('#ed').lang=l;applyTo(document.body);$$('#lgs button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));pd()}
+
+function arm(b,fn){const t=b.textContent;b.onclick=()=>{if(b.dataset.a){clearTimeout(+b.dataset.a);delete b.dataset.a;b.textContent=t;fn()}else{b.textContent='Точно?';b.dataset.a=setTimeout(()=>{delete b.dataset.a;b.textContent=t},3000)}}}
+async function dl(name,data){const d=window.claude&&claude.use?await claude.use('downloads'):null;if(!d){try{const b=data instanceof Blob?data:new Blob([data]),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);st('Файл сохранён')}catch(e){st('Скачивание здесь недоступно')}return}try{await d.save({filename:name,data});st('Файл сохранён')}catch(e){if(e.code!=='declined')st('Ошибка: '+(e.message||e.code))}}
+
+function show(v){$$('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===v));$$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v))}
+$$('.tab').forEach(b=>b.onclick=()=>show(b.dataset.v));$('#logo').onclick=()=>show('home');$('#logo').onkeydown=e=>{if(e.key==='Enter')show('home')};
+const R=document.documentElement,th0=LS.g('theme',null);if(th0)R.dataset.theme=th0;
+$('#th').onclick=()=>{const dark=R.dataset.theme?R.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;const n=dark?'light':'dark';R.dataset.theme=n;LS.s('theme',n)};
+$('#bk').onclick=()=>{const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);o[k]=localStorage.getItem(k)}}catch(e){}dl('study-backup.json',JSON.stringify(o))};
+$('#bi').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());for(const k in o)localStorage.setItem(k,o[k]);location.reload()}catch(x){st('Файл не подошёл')}};
+
+/* ---------- хранилище PDF ---------- */
+const mem={};let dbp;
+const idb=()=>dbp||(dbp=new Promise((res,rej)=>{try{const r=indexedDB.open('study',1);r.onupgradeneeded=()=>r.result.createObjectStore('pdf');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+async function tx(m,f){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('pdf',m);const q=f(t.objectStore('pdf'));t.oncomplete=()=>res(q.result);t.onerror=()=>rej(t.error)})}
+const put=async(id,b)=>{mem[id]=b;try{await tx('readwrite',s=>s.put(b,id))}catch(e){}};
+const get=async id=>{try{const b=await tx('readonly',s=>s.get(id));if(b)return b}catch(e){}return mem[id]};
+const del=async id=>{delete mem[id];try{await tx('readwrite',s=>s.delete(id))}catch(e){}};
+
+/* ---------- читалка ---------- */
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let lib=LS.g('lib',[]),pdf=null,cur=null,page=1,scale=1.2,tool='none',A={},io=null,W=[],base=null,la=0;const tc={},stage=$('#stage'),ap=p=>A[p]||(A[p]={s:[],n:[]}),sv=()=>{if(!LS.s('an:'+cur,A))st('Не хватает места для заметок')},sz=(w,a,b)=>{w.style.width=a+'px';w.style.height=b+'px'};
+function clearPages(){if(io)io.disconnect();pdf=null;cur=null;W=[];$('#pages').innerHTML='';$('#empty').hidden=false;$('#pt').textContent='/ 0'}
+function drawLib(){const el=$('#lib');el.innerHTML=lib.length?'':'<span class="mu">Пока пусто</span>';lib.forEach(b=>{const r=document.createElement('div');r.className='li'+(b.id===cur?' on':'');r.innerHTML='<span>'+esc(b.name)+'</span><b title="Удалить">×</b>';r.firstChild.onclick=()=>openBook(b.id);arm(r.lastChild,async()=>{await del(b.id);lib=lib.filter(x=>x.id!==b.id);LS.s('lib',lib);['pg:','an:','bm:'].forEach(p=>localStorage.removeItem(p+b.id));if(cur===b.id)clearPages();drawLib()});el.appendChild(r)})}
+$('#up').onchange=async e=>{const fs=[...e.target.files];let last;for(const f of fs){const id='b'+Date.now()+Math.floor(Math.random()*999);await put(id,f);lib.push({id,name:f.name.replace(/\.pdf$/i,'')});last=id}LS.s('lib',lib);e.target.value='';if(last)openBook(last)};
+async function openBook(id){try{st('Открываю…');const b=await get(id);if(!b){st('Файл не найден');return}const d=await pdfjsLib.getDocument({data:await b.arrayBuffer()}).promise;pdf=d;cur=id;A=LS.g('an:'+id,{});page=LS.g('pg:'+id,1);$('#q').value='';$('#qr').innerHTML='';drawLib();drawBm();toc();await build(page);st(tr('Страниц')+': '+d.numPages)}catch(e){st('Не удалось открыть PDF')}}
+async function build(goto){const my=pdf;if(io)io.disconnect();const p1=await my.getPage(1);if(my!==pdf)return;base=p1.getViewport({scale:1});const box=$('#pages');box.innerHTML='';W=[];$('#empty').hidden=true;$('#pt').textContent='/ '+my.numPages;$('#zl').textContent=Math.round(scale*100)+'%';
+io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?draw(e.target,+e.target.dataset.i):free(e.target)),{root:stage,rootMargin:'800px 0px'});
+for(let i=1;i<=my.numPages;i++){const w=document.createElement('div');w.className='pgw';w.dataset.i=i;sz(w,base.width*scale,base.height*scale);box.appendChild(w);W.push(w);io.observe(w)}go(goto)}
+async function draw(w,i){if(w.dataset.r)return;w.dataset.r='1';const my=pdf,p=await my.getPage(i);if(my!==pdf||w.dataset.r!=='1')return;const vp=p.getViewport({scale}),d=devicePixelRatio||1;sz(w,vp.width,vp.height);const c=document.createElement('canvas'),o=document.createElement('canvas'),n=document.createElement('div');c.width=vp.width*d;c.height=vp.height*d;c.style.width=vp.width+'px';c.style.height=vp.height+'px';o.width=vp.width;o.height=vp.height;o.className='ov';n.className='nl';w.append(c,o,n);o.onpointerdown=e=>down(e,o,i);try{await p.render({canvasContext:c.getContext('2d'),viewport:vp,transform:d!==1?[d,0,0,d,0,0]:null}).promise}catch(e){}drawStrokes(o,i);drawNotes(n,i)}
+function free(w){if(!w.dataset.r)return;w.dataset.r='';w.textContent=''}
+function go(i){if(!pdf)return;page=Math.min(Math.max(1,i|0),pdf.numPages);$('#pn').value=page;LS.s('pg:'+cur,page);const w=W[page-1];if(w)stage.scrollTop=w.getBoundingClientRect().top-stage.getBoundingClientRect().top+stage.scrollTop-12}
+let tk=0;stage.addEventListener('scroll',()=>{if(tk||!W.length)return;tk=setTimeout(()=>{tk=0;const t=stage.getBoundingClientRect().top+40;let k=W.length-1;for(let i=0;i<W.length;i++)if(W[i].getBoundingClientRect().bottom>t){k=i;break}if(k+1!==page){page=k+1;$('#pn').value=page;LS.s('pg:'+cur,page)}},120)});
+$('#pv').onclick=()=>go(page-1);$('#nx').onclick=()=>go(page+1);$('#pn').onchange=e=>go(+e.target.value||1);
+const zm=f=>{if(!pdf)return;scale=Math.min(4,Math.max(.4,scale*f));build(page)};$('#zi').onclick=()=>zm(1.2);$('#zo').onclick=()=>zm(1/1.2);
+$('#zf').onclick=()=>{if(!pdf)return;scale=(stage.clientWidth-48)/base.width;build(page)};
+document.addEventListener('keydown',e=>{if(!$('#v-read').classList.contains('on')||/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==='ArrowRight')go(page+1);if(e.key==='ArrowLeft')go(page-1)});
+
+$$('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;$$('[data-tool]').forEach(x=>x.classList.toggle('on',x===b));stage.classList.toggle('draw',tool!=='none')});
+function drawStrokes(o,i){const c=o.getContext('2d');c.clearRect(0,0,o.width,o.height);c.lineCap=c.lineJoin='round';(A[i]?.s||[]).forEach(s=>{c.beginPath();s.p.forEach(([x,y],j)=>j?c.lineTo(x*o.width,y*o.height):c.moveTo(x*o.width,y*o.height));if(s.p.length===1)c.lineTo(s.p[0][0]*o.width+.1,s.p[0][1]*o.height);c.strokeStyle=s.k==='mark'?'rgba(255,225,0,.4)':s.c;c.lineWidth=s.k==='mark'?o.width*.028:Math.max(1.5,o.width*.003);c.stroke()})}
+function drawNotes(nl,i){nl.innerHTML='';(A[i]?.n||[]).forEach(n=>{const d=document.createElement('div');d.className='note';d.style.left=n.x*100+'%';d.style.top=n.y*100+'%';d.innerHTML='<b>×</b><textarea placeholder="Заметка…"></textarea>';const t=d.querySelector('textarea');t.value=n.t;t.oninput=()=>{n.t=t.value;sv()};d.firstChild.onclick=()=>{A[i].n=A[i].n.filter(x=>x!==n);sv();drawNotes(nl,i)};nl.appendChild(d)})}
+function refresh(i){const w=W[i-1];if(w&&w.dataset.r&&w.children[1]){drawStrokes(w.children[1],i);drawNotes(w.children[2],i)}}
+function down(e,o,i){if(tool==='none')return;la=i;const r=o.getBoundingClientRect(),pt=v=>[(v.clientX-r.left)/r.width,(v.clientY-r.top)/r.height];if(tool==='note'){const [x,y]=pt(e);ap(i).n.push({x,y,t:''});sv();drawNotes(o.nextSibling,i);return}const s={k:tool,c:$('#pc').value,p:[pt(e)]};ap(i).s.push(s);o.setPointerCapture(e.pointerId);o.onpointermove=v=>{s.p.push(pt(v));drawStrokes(o,i)};o.onpointerup=()=>{o.onpointermove=null;sv();drawStrokes(o,i)};drawStrokes(o,i)}
+$('#un').onclick=()=>{if(!cur)return;const i=la||page;ap(i).s.pop();sv();refresh(i)};$('#cl').onclick=()=>{if(!cur)return;A[page]={s:[],n:[]};sv();refresh(page)};
+
+const ptext=async i=>{const c=tc[cur]||(tc[cur]={});if(c[i]!=null)return c[i];const p=await pdf.getPage(i),t=await p.getTextContent();return c[i]=t.items.map(x=>x.str).join(' ')};
+async function find(){const q=$('#q').value.trim().toLowerCase(),el=$('#qr'),my=pdf;if(!my||!q)return;el.textContent='Ищу…';const out=[];for(let i=1;i<=my.numPages&&out.length<100;i++){const t=await ptext(i);if(my!==pdf)return;const k=t.toLowerCase().indexOf(q);if(k>=0)out.push([i,t.slice(Math.max(0,k-30),k+q.length+40)])}el.innerHTML=out.length?'':'<span class="mu">Не найдено (в сканах без текста поиск не работает)</span>';out.forEach(([i,s])=>{const b=document.createElement('button');b.className='it';b.textContent='стр. '+i+': …'+s+'…';b.onclick=()=>go(i);el.appendChild(b)})}
+$('#qb').onclick=find;$('#q').onkeydown=e=>{if(e.key==='Enter')find()};
+async function toc(){const el=$('#toc'),my=pdf;el.innerHTML='';let n=0;try{const o=await pdf.getOutline();if(!o)throw 0;const walk=async(items,d)=>{for(const it of items){if(n>300||my!==pdf)return;let de=it.dest;if(typeof de==='string')de=await pdf.getDestination(de);let pg=null;if(de&&de[0]!=null)pg=typeof de[0]==='object'?await pdf.getPageIndex(de[0])+1:de[0]+1;if(pg){n++;const b=document.createElement('button');b.className='it';b.style.paddingLeft=6+d*12+'px';b.textContent=it.title;b.onclick=()=>go(pg);el.appendChild(b)}if(it.items?.length)await walk(it.items,d+1)}};await walk(o,0)}catch(e){}if(!n)el.innerHTML='<span class="mu">В этом PDF нет оглавления</span>'}
+function drawBm(){const el=$('#bms'),l=LS.g('bm:'+cur,[]);el.innerHTML=l.length?'':'<span class="mu">Нет закладок</span>';l.forEach((b,i)=>{const r=document.createElement('div');r.className='li';r.innerHTML='<span>Стр. '+b.p+'</span><b>×</b>';r.firstChild.onclick=()=>go(b.p);r.lastChild.onclick=()=>{l.splice(i,1);LS.s('bm:'+cur,l);drawBm()};el.appendChild(r)})}
+$('#bma').onclick=()=>{if(!cur)return;const l=LS.g('bm:'+cur,[]);if(!l.some(b=>b.p===page)){l.push({p:page});l.sort((a,b)=>a.p-b.p);LS.s('bm:'+cur,l)}drawBm()};
+drawLib();
+
+/* ---------- бланки ---------- */
+const D0="font:12pt Calibri,Arial,sans-serif;line-height:1.4;",DG="font:14pt 'Times New Roman',serif;line-height:1.5;",BR='<hr style="page-break-after:always;border:0;border-top:1px dashed #bbb">',J='<p style="text-align:justify;text-indent:12.5mm">';
+const T={
+blank:{n:'Пустой лист',m:[20,20,20,25],css:D0,h:'<p><br></p>'},
+gost:{n:'Реферат по ГОСТу',m:[20,15,20,30],css:DG,h:'<p style="text-align:center">МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ<br>Название учебного заведения<br>Кафедра …</p><p><br><br><br></p><p style="text-align:center"><b>РЕФЕРАТ</b><br>по дисциплине «…»<br>на тему: «…»</p><p><br><br><br></p><p style="text-align:right">Выполнил: студент группы …<br>ФИО<br>Проверил: ФИО</p><p><br><br></p><p style="text-align:center">Город, год</p>'+BR+'<p style="text-align:center"><b>СОДЕРЖАНИЕ</b></p><p>Введение ........ 3</p><p>1. … ........ 4</p><p>Заключение ........ 5</p><p>Список литературы ........ 6</p>'+BR+'<p style="text-align:center"><b>ВВЕДЕНИЕ</b></p>'+J+'Актуальность темы …</p>'+J+'Цель работы …</p>'},
+notes:{n:'Конспект лекции',m:[20,20,20,25],css:D0,h:'<h1>Тема лекции</h1><p>Дата: … &nbsp; Предмет: … &nbsp; Лектор: …</p><h2>Ключевые понятия</h2><ul><li><br></li></ul><h2>Основные тезисы</h2><ol><li><br></li></ol><h2>Вопросы</h2><ul><li><br></li></ul><h2>Вывод</h2><p><br></p>'},
+letter:{n:'Заявление / письмо',m:[20,15,20,30],css:DG,h:'<p style="text-align:right">Кому: должность, ФИО<br>От: ФИО<br>Контакты: …</p><p><br></p><p style="text-align:center"><b>ЗАЯВЛЕНИЕ</b></p>'+J+'Прошу … </p><p><br><br></p><p>Дата: ____________ &nbsp;&nbsp;&nbsp; Подпись: ____________</p>'}};
+let docs=LS.g('docs',{}),did=LS.g('did','');const ED=$('#ed'),cd=()=>docs[did];
+function saveDoc(){const d=cd();if(!d)return;d.h=ED.innerHTML;st(LS.s('docs',docs)?'Сохранено':'Не хватает места в браузере')}
+function listDocs(){$('#ds').innerHTML=Object.entries(docs).map(([k,d])=>'<option value="'+k+'"'+(k===did?' selected':'')+'>'+esc(d.n)+'</option>').join('')}
+function loadDoc(id){did=id;LS.s('did',id);const d=docs[id];ED.innerHTML=d.h;ED.style.cssText=d.css+'padding:'+d.m.map(x=>x+'mm').join(' ');$('#dn').value=d.n;listDocs()}
+function mk(t){const x=T[t];saveDoc();const id='d'+Date.now();docs[id]={n:x.n,m:x.m,css:x.css,h:x.h};LS.s('docs',docs);loadDoc(id)}
+let tm;ED.oninput=()=>{clearTimeout(tm);tm=setTimeout(saveDoc,500)};
+$('#ds').onchange=e=>{saveDoc();loadDoc(e.target.value)};
+$('#nt').onchange=e=>{if(e.target.value)mk(e.target.value);e.target.value=''};
+$('#dn').oninput=e=>{cd().n=e.target.value||'Без названия';LS.s('docs',docs);const o=$('#ds').selectedOptions[0];if(o)o.textContent=cd().n};
+arm($('#dd'),()=>{delete docs[did];const k=Object.keys(docs);if(k.length){LS.s('docs',docs);loadDoc(k[0])}else mk('blank')});
+if(!docs[did]){const k=Object.keys(docs);k.length?loadDoc(k[0]):mk('blank')}else loadDoc(did);
+
+let sel=null;document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&ED.contains(s.anchorNode))sel=s.getRangeAt(0).cloneRange()});
+function ex(c,v){ED.focus();if(sel){const s=getSelection();s.removeAllRanges();s.addRange(sel)}document.execCommand('styleWithCSS',false,true);document.execCommand(c,false,v||null);ED.oninput()}
+$$('[data-c]').forEach(b=>b.onclick=()=>ex(b.dataset.c));
+$('#fb').onchange=e=>ex('formatBlock','<'+e.target.value+'>');$('#ff').onchange=e=>ex('fontName',e.target.value);$('#fs').onchange=e=>ex('fontSize',e.target.value);
+$('#fc').oninput=e=>ex('foreColor',e.target.value);$('#hc').oninput=e=>ex('hiliteColor',e.target.value);
+$('#pb').onclick=()=>ex('insertHTML',BR+'<p><br></p>');
+$('#tb').onclick=()=>{const r=+$('#tr').value||3,c=+$('#tc').value||3;let h='<table style="border-collapse:collapse;width:100%">';for(let i=0;i<r;i++){h+='<tr>';for(let j=0;j<c;j++)h+='<td style="border:1px solid #444;padding:4px">&nbsp;</td>';h+='</tr>'}ex('insertHTML',h+'</table><p><br></p>')};
+function addImg(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/im.width),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ex('insertImage',c.toDataURL(f.type==='image/png'?'image/png':'image/jpeg',.85));res()};im.onerror=res;im.src=r.result};r.readAsDataURL(f)})}
+async function addImgs(fs){for(const f of fs)if(/^image\//.test(f.type))await addImg(f)}
+$('#im').onchange=async e=>{await addImgs(e.target.files);e.target.value=''};
+ED.addEventListener('paste',e=>{const fs=[...(e.clipboardData?.files||[])];if(fs.some(f=>/^image\//.test(f.type))){e.preventDefault();addImgs(fs)}});
+ED.addEventListener('drop',e=>{const fs=[...(e.dataTransfer?.files||[])];if(fs.some(f=>/^image\//.test(f.type))){e.preventDefault();addImgs(fs)}});
+let simg=null;ED.addEventListener('click',e=>{ED.querySelectorAll('img.sel').forEach(i=>i.classList.remove('sel'));simg=e.target.tagName==='IMG'?e.target:null;if(simg)simg.classList.add('sel')});
+$$('[data-ip]').forEach(b=>b.onclick=()=>{if(!simg){st('Сначала нажмите на фото');return}const d=cd();simg.style.width=Math.round((210-d.m[1]-d.m[3])*3.78*b.dataset.ip/100)+'px';simg.style.height='auto';ED.oninput()});
+$('#idl').onclick=()=>{if(!simg){st('Сначала нажмите на фото');return}simg.remove();simg=null;ED.oninput()};
+$('#xd').onclick=()=>{const d=cd(),k=56.7;try{const h='<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><div style="'+d.css+'">'+ED.innerHTML+'</div></body></html>';dl((d.n||'document')+'.docx',htmlDocx.asBlob(h,{margins:{top:d.m[0]*k|0,right:d.m[1]*k|0,bottom:d.m[2]*k|0,left:d.m[3]*k|0}}))}catch(e){st('Не удалось создать .docx')}};
+$('#xp').onclick=async()=>{const d=cd(),el=document.createElement('div');el.style.cssText=d.css+'width:'+(210-d.m[1]-d.m[3])+'mm;background:#fff;color:#000;position:fixed;left:-10000px;top:0';el.innerHTML=ED.innerHTML;document.body.appendChild(el);st('Готовлю PDF…');try{const b=await html2pdf().set({margin:[d.m[0],d.m[3],d.m[2],d.m[1]],image:{type:'jpeg',quality:.95},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'},pagebreak:{mode:['css','legacy']}}).from(el).outputPdf('blob');await dl((d.n||'document')+'.pdf',b)}catch(e){st('Не удалось создать PDF')}el.remove()};
+
+/* ---------- учёба ---------- */
+const pm={left:1500,mode:'Работа',run:false,end:0,iv:0,done:0},fm=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function pd(){$('#tm').textContent=fm(pm.left);$('#pm').textContent=tr(pm.mode)+' · '+tr('циклов')+': '+pm.done;$('#ps').textContent=pm.run?'Пауза':'Старт'}
+$('#ps').onclick=()=>{if(pm.run){clearInterval(pm.iv);pm.run=false}else{pm.end=Date.now()+pm.left*1000;pm.run=true;pm.iv=setInterval(()=>{pm.left=Math.max(0,Math.round((pm.end-Date.now())/1000));if(!pm.left){clearInterval(pm.iv);pm.run=false;if(pm.mode==='Работа'){pm.done++;pm.mode='Перерыв';pm.left=300;st('Пора отдохнуть 5 минут')}else{pm.mode='Работа';pm.left=1500;st('Перерыв окончен')}}pd()},250)}pd()};
+$('#pr').onclick=()=>{clearInterval(pm.iv);pm.run=false;pm.mode='Работа';pm.left=1500;pd()};pd();
+
+let cards=LS.g('cards',[]),ci=0,fl=false;
+function cdr(){const c=cards[ci],e=$('#cd');e.textContent=c?(fl?c.b:c.a):'Добавьте первую карточку';e.className='fc'+(fl?' fl':'');$('#cc').textContent=cards.length?(ci+1)+' / '+cards.length:''}
+const cm=d=>{if(!cards.length)return;ci=(ci+d+cards.length)%cards.length;fl=false;cdr()};
+$('#cd').onclick=()=>{fl=!fl;cdr()};$('#c1').onclick=()=>cm(-1);$('#c2').onclick=()=>cm(1);
+$('#cn').onclick=()=>{const a=$('#ca').value.trim(),b=$('#cb').value.trim();if(!a||!b)return;cards.push({a,b});LS.s('cards',cards);ci=cards.length-1;fl=false;$('#ca').value=$('#cb').value='';cdr()};
+arm($('#cx'),()=>{cards.splice(ci,1);LS.s('cards',cards);ci=Math.max(0,ci-1);fl=false;cdr()});cdr();
+
+let tasks=LS.g('tasks',[]);
+function tdr(){const el=$('#tl'),today=new Date().toLocaleDateString('sv');el.innerHTML=tasks.length?'':'<span class="mu">Задач пока нет</span>';[...tasks].sort((a,b)=>(a.d||'9').localeCompare(b.d||'9')).forEach(t=>{const r=document.createElement('div');r.className='tk';r.innerHTML='<input type="checkbox"'+(t.x?' checked':'')+'><span class="'+(t.x?'done':'')+'">'+esc(t.t)+'</span><span class="'+(t.d&&t.d<today&&!t.x?'late':'mu')+'">'+(t.d||'')+'</span><b style="cursor:pointer">×</b>';r.firstChild.onchange=e=>{t.x=e.target.checked;LS.s('tasks',tasks);tdr()};r.lastChild.onclick=()=>{tasks=tasks.filter(x=>x!==t);LS.s('tasks',tasks);tdr()};el.appendChild(r)})}
+$('#tn').onclick=()=>{const t=$('#ti').value.trim();if(!t)return;tasks.push({t,d:$('#td').value,x:false});LS.s('tasks',tasks);$('#ti').value='';tdr()};$('#ti').onkeydown=e=>{if(e.key==='Enter')$('#tn').click()};tdr();
+$$('[data-go]').forEach(b=>b.onclick=()=>{show(b.dataset.go);const e=b.dataset.at&&$('#'+b.dataset.at);if(e)e.scrollIntoView({block:'center'})});
+$$('[data-new]').forEach(b=>b.onclick=()=>{mk(b.dataset.new);show('doc')});
+LG.forEach(([c,n])=>{const b=document.createElement('button');b.textContent=n;b.dataset.l=c;b.onclick=()=>setLang(c);$('#lgs').appendChild(b)});setLang(lang);
+</script>
+</body>
+</html>
